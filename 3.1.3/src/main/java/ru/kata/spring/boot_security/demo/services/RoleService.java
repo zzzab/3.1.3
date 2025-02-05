@@ -12,5 +12,4 @@ public interface RoleService {
     Set<Role> getSetRoles(String[] roleNames);
     @Query("SELECT r FROM Role r WHERE r.name = :name")
     Role getRoleByName(@Param("name") String name);
-    // void addRole(Role role);
 }

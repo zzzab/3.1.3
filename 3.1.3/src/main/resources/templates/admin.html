@@ -235,7 +235,7 @@
                     <tbody>
                     <tr th:each="user: ${user}">
                         <td th:utext="${user.id}">ID</td>
-                        <td th:utext="${user.name}">First name</td>
+                        <td th:utext="${user.username}">First name</td>
                         <td th:utext="${user.surname}">Surname</td>
                         <td th:utext="${user.age}">Age</td>
                         <td th:utext="${user.email}">Email</td>
@@ -281,7 +281,7 @@
                             <tbody>
                             <tr th:each="users: ${userList}">
                                 <td th:text="${users.id}">Id</td>
-                                <td th:text="${users.name}">Name</td>
+                                <td th:text="${users.username}">Name</td>
                                 <td th:text="${users.surname}">Surname</td>
                                 <td th:text="${users.age}">Age</td>
                                 <td th:text="${users.email}">Email</td>
@@ -295,7 +295,7 @@
                                         <button id="myBtn" class="btn btn-primary btn-sm"
 
                                                 th:attr="data-user-id=${users.id},
-                  data-user-name=${users.name},
+                  data-user-name=${users.username},
                   data-user-surname=${users.surname},
                   data-user-age=${users.age},
                   data-user-email=${users.email},
@@ -311,13 +311,13 @@
                                                 <div class="modal-body">
                                                     <br>
                                                     <form action="#" th:action="@{/user-update}" th:object="${user}" method="POST">
-                                                        Id<br><input readonly type="number" th:field="*{id}" id="id" placeholder="ID"><br>
-                                                        Name<br><input type="text" th:field="*{name}" id="name" placeholder="Enter please name" required/><br>
-                                                        Surname<br><input type="text" th:field="*{surname}" id="surname" placeholder="Enter please surname" required/><br>
-                                                        Age<br><input type="number" th:field="*{age}" id="age" placeholder="Enter please age" required/><br>
+                                                        Id<br><label for="id"></label><input readonly type="number" th:field="*{id}" id="id" placeholder="ID"><br>
+                                                        Name<br><label for="name"></label><input type="text" th:field="*{username}" id="name" placeholder="Enter please name" required/><br>
+                                                        Surname<br><label for="surname"></label><input type="text" th:field="*{surname}" id="surname" placeholder="Enter please surname" required/><br>
+                                                        Age<br><label for="age"></label><input type="number" th:field="*{age}" id="age" placeholder="Enter please age" required/><br>
 
-                                                        Email<br><input type="text" th:field="*{email}" id="email" placeholder="Enter please email" required/><br>
-                                                        Password<br><input type="text" th:field="*{password}" id="password" placeholder="Enter please password" required/><br>
+                                                        Email<br><label for="email"></label><input type="text" th:field="*{email}" id="email" placeholder="Enter please email" required/><br>
+                                                        Password<br><label for="password"></label><input type="text" th:field="*{password}" id="password" placeholder="Enter please password" required/><br>
 
                                                         <p>
                                                             <label>
@@ -337,7 +337,7 @@
                                         <button id="myBtn2" class="btn btn-primary  btn-sm"
 
                                                 th:attr="data-user-id=${users.id},
-                  data-user-name=${users.name},
+                  data-user-name=${users.username},
                   data-user-surname=${users.surname},
                   data-user-age=${users.age},
                   data-user-email=${users.email},
@@ -353,13 +353,13 @@
                                                     <br>
                                                     <form action="#" th:action="@{/user-delete}" th:object="${user}" method="POST">
                                                         <input type="hidden" th:name="id" th:value="${users.id}"/>
-                                                        Id<br><input  type="number" th:field="*{id}" id="id2" placeholder="ID"><br>
-                                                        Name<br><input  type="text" th:field="*{name}" id="name2" placeholder="Enter please name"><br>
-                                                        Surname<br><input  type="text" th:field="*{surname}" id="surname2" placeholder="Enter please surname"><br>
-                                                        Age<br><input  type="number" th:field="*{age}" id="age2" placeholder="Enter please age" ><br>
+                                                        Id<br><label for="id2"></label><input type="number" th:field="*{id}" id="id2" placeholder="ID"><br>
+                                                        Name<br><label for="name2"></label><input type="text" th:field="*{username}" id="name2" placeholder="Enter please name"><br>
+                                                        Surname<br><label for="surname2"></label><input type="text" th:field="*{surname}" id="surname2" placeholder="Enter please surname"><br>
+                                                        Age<br><label for="age2"></label><input type="number" th:field="*{age}" id="age2" placeholder="Enter please age" ><br>
 
-                                                        Email<br><input  type="text" th:field="*{email}" id="email2" placeholder="Enter please email" ><br>
-                                                        Password<br><input  type="text" th:field="*{password}" id="password2" placeholder="Enter please password" ><br>
+                                                        Email<br><label for="email2"></label><input type="text" th:field="*{email}" id="email2" placeholder="Enter please email" ><br>
+                                                        Password<br><label for="password2"></label><input type="text" th:field="*{password}" id="password2" placeholder="Enter please password" ><br>
                                                         <p>
                                                             <label>
                                                                 <select size="3" multiple="multiple" name="rolesId" id="roles2">
@@ -384,7 +384,7 @@
                         <div class="table-header" style="font-weight: bold; background-color: #f5f5f5; width: 100%; padding: 15px; font-size: 20px;">
                             Add new user
                         </div>
-                        <div class="divider-line" style="border-bottom: 1px solid #d3d3d3; width: 100%; margin-bottom: 15px; margin: 0; padding-left: 0;"></div>
+                        <div class="divider-line" style="border-bottom: 1px solid #d3d3d3; width: 100%; margin: 0;padding-left: 0;"></div>
                         <div class="form-container">
 
                             <form th:method="POST" th:action="@{/user-create}" th:object="${user}">
@@ -429,17 +429,17 @@
 <script>
     // Функция для переключения видимых секций
     function showSection(sectionId) {
-        var sections = document.querySelectorAll('.scrollspy-example-2');
+        const sections = document.querySelectorAll('.scrollspy-example-2');
         sections.forEach(function (section) {
             section.classList.add('hidden');
         });
 
-        var selectedSection = document.getElementById(sectionId);
+        const selectedSection = document.getElementById(sectionId);
         selectedSection.classList.remove('hidden');
     }
 
     // Получаем модальное окно
-    var modal = document.getElementById("myModal");
+    const modal = document.getElementById("myModal");
 
     // Получаем кнопку для открытия модального окна
     document.querySelectorAll('#myBtn').forEach(button => {
@@ -466,7 +466,7 @@
     });
 
 
-    var modal2 = document.getElementById("myModal2");
+    const modal2 = document.getElementById("myModal2");
     document.querySelectorAll('#myBtn2').forEach(button => {
         button.addEventListener('click', function() {
             // Открываем модальное окно
@@ -489,13 +489,13 @@
             document.getElementById('password2').value = userPassword2;
         });
     });
-    var closeButtons = document.querySelectorAll(".close");
+    const closeButtons = document.querySelectorAll(".close");
 
     // Добавляем обработчик клика для каждого элемента
     closeButtons.forEach(function(span) {
         span.onclick = function() {
             // Найти ближайшее модальное окно и скрыть его
-            var modal3 = this.closest(".modal");
+            const modal3 = this.closest(".modal");
             if (modal3) {
                 modal3.style.display = "none";
             }
