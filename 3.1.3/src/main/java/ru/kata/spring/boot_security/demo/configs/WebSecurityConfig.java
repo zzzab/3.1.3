@@ -1,61 +1,46 @@
 package ru.kata.spring.boot_security.demo.configs;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@EnableTransactionManagement
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig{
 
-    private final SuccessUserHandler successUserHandler;
-    private final UserDetailsService userDetailsService;
-
-
-    public WebSecurityConfig(SuccessUserHandler successUserHandler, @Qualifier("userServiceImpl") UserDetailsService userDetailsService) {
-        this.successUserHandler = successUserHandler;
-        this.userDetailsService = userDetailsService;
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .antMatchers("/authenticated/**", "/").authenticated()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user").hasAnyRole("ADMIN", "USER")
-                .and()
-                .formLogin()
-                .successHandler(successUserHandler)
-                .and()
-                .logout().logoutSuccessUrl("/")
-                .and().csrf().disable();
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, SuccessUserHandler successUserHandler) throws Exception {
+        return http
+                /*
+                 * Правила читаются сверху вниз и как только я достигаю до нужного правила - остальные игнорируются.
+                 */
+                .csrf(AbstractHttpConfigurer::disable) // Отключается необходимость передавать cookie (или иные заговлоки) при PUT, POST, DELETE методах.
+                .authorizeHttpRequests(authz -> authz
+                        .requestMatchers("/user").hasAnyRole("USER", "ADMIN")// Доступ для пользователей с ролями USER или ADMIN
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST).hasRole("ADMIN")  // Доступ только для пользователей с ролью ADMIN
+                        .anyRequest().authenticated()  // Остальные запросы требуют аутентификации
+                )
+                .formLogin(form -> form// Настраиваем свою кастомную страницу для логина
+                        .permitAll()
+                        .successHandler(successUserHandler)
+//                        .defaultSuccessUrl("/user", true)  // Перенаправление после успешного логина
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")  // URL для логаута
+                        .logoutSuccessUrl("/login?logout")  // Куда перенаправлять после успешного логаута
+                        .permitAll()
+                )
+                .build();
     }
 
     @Bean
     public static BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    protected DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider daoAuthProvider = new DaoAuthenticationProvider();
-        daoAuthProvider.setPasswordEncoder(passwordEncoder());
-        daoAuthProvider.setUserDetailsService(userDetailsService);
-        return daoAuthProvider;
-    }
-
-    @Override
-    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) {
-        authenticationManagerBuilder.authenticationProvider(daoAuthenticationProvider());
     }
 }

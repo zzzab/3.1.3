@@ -3,7 +3,7 @@ package ru.kata.spring.boot_security.demo.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.models.Role;
+import ru.kata.spring.boot_security.demo.models.entity.Role;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 
 import java.util.HashSet;
@@ -29,10 +29,11 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Set<Role> getSetRoles(String[] roleNames) {
-        Set<Role> roleSet = new HashSet<>();
-        for (String role : roleNames) {
-            roleSet.add(getRoleByName(role));
+        Set<Role> roles = new HashSet<>();
+        for (String str: roleNames) {
+            roles.add(getRoleByName(str));
         }
-        return roleSet;
+        return roles;
     }
+
 }
