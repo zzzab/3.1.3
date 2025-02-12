@@ -29,7 +29,7 @@ public class User implements UserDetails {
     private String surname;
     @Column
     private int age;
-    @Column
+    @Column(unique = true)
     private String email;
     @Column
     private String password;
