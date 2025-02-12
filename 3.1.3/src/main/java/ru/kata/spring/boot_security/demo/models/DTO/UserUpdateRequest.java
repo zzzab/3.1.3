@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.models.DTO;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,24 +12,23 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserUpdateRequest {
+
     private Long id;
 
-    @NotEmpty
+    @NotNull(message = "Username cannot be null")
     private String username;
 
-    @NotEmpty
+    @NotNull(message = "Surname cannot be null")
     private String surname;
 
-    @NotEmpty
     private int age;
 
-    @NotEmpty
     @Email(message = "Email should be valid")
     private String email;
 
-    @NotEmpty
+    @NotNull(message = "Password cannot be null")
     private String password;
 
-    @NotNull(message = "Role cannot be blank")
+    @NotNull(message = "Roles cannot be null")
     private String[] roles;
 }

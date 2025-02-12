@@ -26,8 +26,10 @@ public class UserInit {
     @PostConstruct
     public void init() {
         if (userRepository.findByUsername("admin") == null) {
-            Role userRole = roleRepository.getRoleByName("ROLE_USER");
-            Role adminRole = roleRepository.getRoleByName("ROLE_ADMIN");
+            Role userRole = new Role("ROLE_USER");
+            roleRepository.save(userRole);
+            Role adminRole = new Role("ROLE_ADMIN");
+            roleRepository.save(adminRole);
 
 
             Set<Role> adminRoles = new HashSet<>();

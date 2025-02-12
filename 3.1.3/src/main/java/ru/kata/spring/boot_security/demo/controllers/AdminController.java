@@ -30,20 +30,21 @@ public class AdminController {
     }
 
     @PostMapping("/user-create")
-    public String createUser(User user,
-                             @RequestParam(value = "roles") String[] roles) {
-        user.setRoles(roleService.getSetRoles(roles));
-        userService.saveUser(user);
-        return "redirect:/admin/users";
-    }
+    public String createUser(@ModelAttribute("userUpdateRequest") UserUpdateRequest userUpdateRequest) {
+        User newUser = new User();
+        newUser.setUsername(userUpdateRequest.getUsername());
+        newUser.setSurname(userUpdateRequest.getSurname());
+        newUser.setAge(userUpdateRequest.getAge());
+        newUser.setEmail(userUpdateRequest.getEmail());
+        newUser.setPassword(userUpdateRequest.getPassword());
 
-    @GetMapping("/admin/user-update/{id}")
-    public String updateUserForm(@PathVariable("id") Long id, Model model) {
-        User user = userService.findById(id);
-        List<Role> listRoles = roleService.findAll();
-        model.addAttribute("user", user);
-        model.addAttribute("listRoles", listRoles);
-        return "update_user";
+        if (userUpdateRequest.getRoles() != null) {
+            Set<Role> roles = roleService.getSetRoles(userUpdateRequest.getRoles());
+            newUser.setRoles(roles);
+        }
+
+        userService.saveUser(newUser);
+        return "redirect:/admin/users";
     }
 
     @PostMapping("/user-update")
@@ -89,6 +90,7 @@ public class AdminController {
 
     @PostMapping("/user-delete")
     public String deleteUser(@RequestParam("id") Long id) {
+        System.out.println("Deleting user with ID: " + id);
         userService.deleteById(id);
         return "redirect:/admin/users";
     }

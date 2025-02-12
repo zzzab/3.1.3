@@ -49,9 +49,15 @@ public class UserServiceImpl implements UserService{
     }
 
     public void deleteById(Long id) {
-        userRepository.deleteById(id);
         User user = findById(id);
-        System.out.println("User " + user.getUsername() + " " + user.getSurname() + " deleted");
+
+        if (user != null) {
+            System.out.println("User " + user.getUsername() + " " + user.getSurname() + " deleted");
+        } else {
+            System.out.println("User with id " + id + " not found");
+        }
+
+        userRepository.deleteById(id);
     }
 
     @Override
@@ -67,5 +73,4 @@ public class UserServiceImpl implements UserService{
     public User findById(Long id) {
         return userRepository.findById(id).orElse(null);
     }
-
 }

@@ -7,7 +7,6 @@ import ru.kata.spring.boot_security.demo.models.entity.Role;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -16,11 +15,6 @@ import java.util.Set;
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
-
-    @Override
-    public List<Role> findAll() {
-        return roleRepository.findAll();
-    }
 
     @Override
     public Role getRoleByName(String name) {
